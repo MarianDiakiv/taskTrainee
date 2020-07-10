@@ -153,30 +153,35 @@ public class ValidationServiceImpl implements ValidationService {
             double x12 = X.get(i-1);
             double y11 = Y.get(i);
             double y12 = Y.get(i-1);
+            for (int j = 3; j <X.size() ; j++) {
 
-            //відрізок з яким перевіряєм
-            double x21 = X.get(i-2);
-            double  x22 = X.get(i-3);
-            double y21 = Y.get(i-2);
-            double y22 = Y.get(i-3);
 
-            // із рівняння прямих
-           double K1 = (y12-y11)/(x12-x11);
-           double K2 = (y22-y21)/(x22-x21);
-           double d1 = (x12*y11-x11*y12)/(x12-x11);
-           double d2 = (x22*y21*y22)/(x22-x21);
+                //відрізок з яким перевіряєм
+                double x21 = X.get(j - 2);
+                double x22 = X.get(j - 3);
+                double y21 = Y.get(j - 2);
+                double y22 = Y.get(j - 3);
+                if ((x11 == x21) || (y11 == y21)){
 
-           double x = (d2-d1)/(K1-K2);
-           double y = K1*(d2-d1)/(K1-K2)+d1;
-           // перевірка чи точка належить до відрізку із яким ми перевіряєм
-            // за
-           double vur1 = (x-x22)*(y21-y22);
-           double vur2 = (y-y22)*(y21-y22);
-           if (vur1==vur2){
-               // точка належить відрізку отрже сторони перетинаються
-               return "ERROR Crosing!";
-           }
+                    // із рівняння прямих
+                    double K1 = (y12 - y11) / (x12 - x11);
+                double K2 = (y22 - y21) / (x22 - x21);
+                double d1 = (x12 * y11 - x11 * y12) / (x12 - x11);
+                double d2 = (x22 * y21 * y22) / (x22 - x21);
 
+                double x = (d2 - d1) / (K1 - K2);
+                double y = K1 * (d2 - d1) / (K1 - K2) + d1;
+                // перевірка чи точка належить до відрізку із яким ми перевіряєм
+                // за
+                double vur1 = (x - x22) * (y21 - y22);
+                double vur2 = (y - y22) * (y21 - y22);
+                if (vur1 == vur2) {
+                    // точка належить відрізку отрже сторони перетинаються
+                    return "ERROR Crosing!";
+                }
+            }
+
+        }
         }
         return "OK";
     }
