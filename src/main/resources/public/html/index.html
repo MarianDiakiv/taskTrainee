@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+
+</head>
+<body>
+<div class="conteiner" >
+
+    <div class="messagediv" >
+        <p> Для кращого відображення кімнати на канвісі рекомендується вводити значення більші за 10 </p>
+        <p> Для закриття кімнати останні координати мають співпадати із першими </p>
+    </div>
+    <div>
+
+        <div class="coor"> <span class="coordinate_text"> X </span><input type="text" placeholder="Enter X " id="idx"></div>
+        <br>
+        <div class="coor"><span class="coordinate_text"> Y </span><input type="text" placeholder="Enter Y " id="idy" ></div>
+        <br>
+        <input class="button_add" type="button" value="Add Point" onclick="addPoint()" >
+        <br>
+        <input  class="button_add" type="button" value="Check and Draw" onclick="chackData()" >
+    </div>
+    <div class="points">
+        <div class="coordinate_text div_inline">X = </div><div class="div_inline" ><p id="listX" ></p></div>
+        <br>
+        <div class="coordinate_text div_inline">Y = </div><div class="div_inline"><p id = "listY"></p></div>
+        <!--<div class="coordinate_text" >-->
+            <!--<p id="listX" >Координати</p>-->
+        <!--</div>-->
+    </div>
+    <br>
+    <div>
+        <p id="Status" ></p>
+    </div>
+    <br>
+    <div class="canvas_div">
+        <canvas id ="Canvas"  >
+            Your browser does not support the canvas element.
+        </canvas>
+    </div>
+</div>
+
+</body>
+<script>
+    var X=[];
+    var Y =[];
+    function addPoint() {
+        var pointx=document.getElementById("idx").value;
+        console.log("pointx"+pointx);
+        var pointy=document.getElementById("idy").value;
+        console.log("pointy"+pointy);
+        X.push(pointx);
+        Y.push(pointy);
+        console.log(X);
+        console.log(Y);
+        // var pairs = document.getElementById("listX").value;
+        // document.getElementById("listX").innerText = pairs+"("+pointx+","+pointy+")";
+        document.getElementById("listX").innerText = X;
+        document.getElementById("listY").innerText = Y;
+
+    }
+    function sendData() {
+        var mass = [];
+        mass.push(X);
+        mass.push(Y);
+        axios.post()
+    }
+    function chackData() {
+        var list =[X,Y];
+        var str;
+        axios.post('/check',list)
+            .then(function (value) {
+                str = value.data;
+                console.log(str);
+                document.getElementById("Status").innerHTML = str;
+            })
+            .catch(function (reason) { console.log(reason);})
+        console.log(list);
+        var ok= "OK"
+
+        if (strcmp(str,ok)==0){
+
+            draw();
+        } else {
+            // document.getElementById("Status").innerHTML = str;
+            console.log("ELSE");
+        }
+    }
+    function getStatus(){
+       // const axios = require('axios');
+        axios.get('/getstatus').then(function (responce) {
+            console.log(responce);
+        }).catch(function (reason) {
+            console.log(reason);
+        })
+    }
+    function strcmp(a, b) {
+        if (a < b) return -1;
+        if (a > b) return 1;
+        return 0;
+    }
+    function draw() {
+        var  canvas = document.getElementById("Canvas");
+        var context = canvas.getContext("2d");
+        for (var i =0;i<X.length-1;i = i+1){
+            context.moveTo(X[i],Y[i]);
+            context.lineTo(X[i+1],Y[i+1]);
+            context.stroke();
+        }
+    }
+
+
+
+</script>
+<style>
+    .messagediv{
+        margin-top: 3%;
+        /*margin-left: 10%;*/
+        font-family: SansSerif;
+        font-size: 15px;
+        color: blue;
+
+    }
+    .conteiner{
+        margin-left: 10%;
+    }
+    .coordinate_text{
+        font-family: "Times New Roman";
+        font-size: 20px;
+        color: black;
+        /*width: 70px;*/
+    }
+    .coor{
+        margin-top: 3px;
+    }
+    .button_add{
+        margin-top: 3px;
+        margin-bottom: 10px;
+        border-radius: 6px;
+        border: white;
+        width: 190px;
+
+    }
+    .div_inline{
+        display: inline;
+    }
+    .canvas_div{
+        border: black;
+
+        border-color: black;
+    }
+    #Status{
+        font-family: SansSerif;
+        font-size: 20px;
+        color: red;
+    }
+    #Canvas{
+        width:500px;
+        height:500px;
+        border: 5px black;
+    }
+
+
+    /*.button_*/
+
+</style>
+</html>
